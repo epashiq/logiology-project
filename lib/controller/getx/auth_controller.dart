@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
@@ -8,14 +10,19 @@ class LoginController extends GetxController {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void login() {
+ Future<void>  login() async{
     final username = usernameController.text;
     final password = passwordController.text;
 
-    if (username == 'admin' && password == 'Pass@123') {
+    try {
+      if (username == 'admin' && password == 'Pass@123') {
       Get.offNamed('/home');
+      log('login succesfully');
     } else {
       Get.snackbar('Error', 'Invalid username or password', snackPosition: SnackPosition.BOTTOM);
+    }
+    } catch (e) {
+      log(e.toString());
     }
   }
 
