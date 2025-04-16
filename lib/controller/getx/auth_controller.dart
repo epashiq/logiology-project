@@ -1,26 +1,65 @@
+// import 'dart:developer';
+
+// import 'package:flutter/material.dart';
+// import 'package:get/get_core/src/get_main.dart';
+// import 'package:get/get_navigation/src/extension_navigation.dart';
+// import 'package:get/get_navigation/src/snackbar/snackbar.dart';
+// import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+
+// class AuthController extends GetxController {
+//   final usernameController = TextEditingController();
+//   final passwordController = TextEditingController();
+
+//   Future<void> login() async {
+//     final username = usernameController.text;
+//     final password = passwordController.text;
+
+//     try {
+//       if (username == 'admin' && password == 'Pass@123') {
+//         Get.offNamed('/home');
+//         log('login succesfully');
+//       } else {
+//         Get.snackbar('Error', 'Invalid username or password',
+//             snackPosition: SnackPosition.BOTTOM);
+//       }
+//     } catch (e) {
+//       log(e.toString());
+//     }
+//   }
+
+//   @override
+//   void onClose() {
+//     usernameController.dispose();
+//     passwordController.dispose();
+//     super.onClose();
+//   }
+// }
+
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_navigation/src/snackbar/snackbar.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginController extends GetxController {
+class AuthController extends GetxController {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
- Future<void>  login() async{
+  Future<void> login() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedUsername = prefs.getString('username') ?? 'admin';
+    final savedPassword = prefs.getString('password') ?? 'Pass@123';
+
     final username = usernameController.text;
     final password = passwordController.text;
 
     try {
-      if (username == 'admin' && password == 'Pass@123') {
-      Get.offNamed('/home');
-      log('login succesfully');
-    } else {
-      Get.snackbar('Error', 'Invalid username or password', snackPosition: SnackPosition.BOTTOM);
-    }
+      if (username == savedUsername && password == savedPassword) {
+        Get.offNamed('/home');
+        log('Login successful');
+      } else {
+        Get.snackbar('Error', 'Invalid username or password',
+            snackPosition: SnackPosition.BOTTOM);
+      }
     } catch (e) {
       log(e.toString());
     }
@@ -32,5 +71,4 @@ class LoginController extends GetxController {
     passwordController.dispose();
     super.onClose();
   }
-} 
-
+}

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:logiology_project/model/product_model.dart'; // Update with your actual model import
+import 'package:logiology_project/model/product_model.dart'; 
 
 class ProductDetailsScreen extends StatefulWidget {
   final Product product;
@@ -23,7 +23,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Product Image
             AspectRatio(
               aspectRatio: 1.5,
               child: Image.network(
@@ -38,7 +37,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Product Info
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(

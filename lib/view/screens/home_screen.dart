@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logiology_project/controller/getx/product_controller.dart';
 import 'package:logiology_project/view/screens/product_details_screen.dart';
+import 'package:logiology_project/view/widgets/filter_drop_down_widget.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -34,12 +36,70 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
+          return GridView.builder(
+            padding: const EdgeInsets.all(12),
+            itemCount: 6,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 0.65,
+            ),
+            itemBuilder: (context, index) {
+              return Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(16)),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 12,
+                              color: Colors.white,
+                              margin: const EdgeInsets.only(bottom: 6),
+                            ),
+                            Container(
+                              height: 10,
+                              width: 50,
+                              color: Colors.white,
+                              margin: const EdgeInsets.only(bottom: 6),
+                            ),
+                            Container(
+                              height: 10,
+                              width: 30,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
         }
 
         return Column(
           children: [
-            // Search Field
             Padding(
               padding: const EdgeInsets.all(12),
               child: TextField(
@@ -56,14 +116,12 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
-            // Filters Row
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Row(
                 children: [
-                  // Category
-                  Obx(() => FilterDropdown(
+                  Obx(() => FilterDropDownWidget(
                         hint: 'Category',
                         value: controller.selectedCategory.value.isEmpty
                             ? null
@@ -73,8 +131,7 @@ class HomeScreen extends StatelessWidget {
                       )),
                   const SizedBox(width: 10),
 
-                  // Tag
-                  Obx(() => FilterDropdown(
+                  Obx(() => FilterDropDownWidget(
                         hint: 'Tag',
                         value: controller.selectedTag.value.isEmpty
                             ? null
@@ -84,19 +141,18 @@ class HomeScreen extends StatelessWidget {
                       )),
                   const SizedBox(width: 10),
 
-                  // Price
-                  Obx(() => FilterDropdown(
+                  Obx(() => FilterDropDownWidget(
                         hint: 'Price',
                         value: controller.selectedPriceRange.value.isEmpty
                             ? null
                             : controller.selectedPriceRange.value,
                         items: controller.priceRanges,
-                        onChanged: (val) => controller.setPriceRange(val ?? ''),
+                        onChanged: (val) =>
+                            controller.setPriceRange(val ?? ''),
                       )),
 
                   const SizedBox(width: 10),
 
-                  // Reset Button
                   TextButton.icon(
                     onPressed: controller.resetFilters,
                     icon: const Icon(Icons.filter_list_off, size: 18),
@@ -115,7 +171,6 @@ class HomeScreen extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            // Product Grid
             Expanded(
               child: Obx(() {
                 if (controller.searchProducts.isEmpty) {
@@ -155,7 +210,6 @@ class HomeScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Image
                             Expanded(
                               child: ClipRRect(
                                 borderRadius: const BorderRadius.vertical(
@@ -173,7 +227,6 @@ class HomeScreen extends StatelessWidget {
                               ),
                             ),
 
-                            // Product Details
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
@@ -200,7 +253,8 @@ class HomeScreen extends StatelessWidget {
                                           size: 14, color: Colors.orange),
                                       const SizedBox(width: 4),
                                       Text(product.rating.toString(),
-                                          style: const TextStyle(fontSize: 12)),
+                                          style:
+                                              const TextStyle(fontSize: 12)),
                                     ],
                                   )
                                 ],
@@ -215,7 +269,6 @@ class HomeScreen extends StatelessWidget {
               }),
             ),
 
-            // Load More
             Obx(() => controller.isMoreLoading.value
                 ? const Padding(
                     padding: EdgeInsets.all(12.0),
@@ -229,45 +282,4 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class FilterDropdown extends StatelessWidget {
-  final String hint;
-  final String? value;
-  final List<String> items;
-  final void Function(String?) onChanged;
 
-  const FilterDropdown({
-    super.key,
-    required this.hint,
-    required this.value,
-    required this.items,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      value: value,
-      hint: Text(hint),
-      underline: const SizedBox(),
-      onChanged: onChanged,
-      isDense: true,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      items: [
-        DropdownMenuItem<String>(
-          value: '',
-          child: Text("All $hint"),
-        ),
-        ...items
-            .where((item) => item != 'All')
-            .map((item) => DropdownMenuItem<String>(
-                  value: item,
-                  child: Text(item),
-                ))
-            .toList(),
-      ],
-      style: const TextStyle(fontSize: 13, color: Colors.black),
-      borderRadius: BorderRadius.circular(12),
-      dropdownColor: Colors.white,
-    );
-  }
-}

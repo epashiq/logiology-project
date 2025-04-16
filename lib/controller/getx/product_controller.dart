@@ -238,11 +238,9 @@ class ProductController extends GetxController {
   final selectedTag = ''.obs;
   final selectedPriceRange = ''.obs;
 
-  // List to store available categories and tags
   final categories = <String>[].obs;
   final tags = <String>[].obs;
 
-  // Price range options
   final priceRanges = [
     'All',
     'Under \$50',
@@ -282,7 +280,6 @@ class ProductController extends GetxController {
       skip += limit;
       hasMore = result.products.length == limit;
 
-      // Extract unique categories and tags
       extractCategoriesAndTags();
     } catch (e) {
       Get.snackbar("Error", "Failed to load products");
@@ -300,10 +297,8 @@ class ProductController extends GetxController {
       skip += limit;
       hasMore = result.products.length == limit;
 
-      // Extract unique categories and tags from new products
       extractCategoriesAndTags();
 
-      // Apply current filters to ensure consistency
       applyAllFilters();
     } catch (e) {
       Get.snackbar("Error", "Failed to load more products");
@@ -313,12 +308,10 @@ class ProductController extends GetxController {
   }
 
   void extractCategoriesAndTags() {
-    // Extract unique categories
     final uniqueCategories =
         allProducts.map((p) => p.category).toSet().toList();
     categories.assignAll(['All', ...uniqueCategories]);
 
-    // Extract unique tags (assuming Product has a tags property)
     final allTags = <String>[];
     for (var product in allProducts) {
       if (product.tags.isNotEmpty) {
@@ -351,7 +344,6 @@ class ProductController extends GetxController {
   void applyAllFilters() {
     List<Product> filteredList = allProducts;
 
-    // Apply text search filter
     if (filterText.isNotEmpty) {
       filteredList = filteredList
           .where((product) =>
@@ -364,14 +356,12 @@ class ProductController extends GetxController {
           .toList();
     }
 
-    // Apply category filter
     if (selectedCategory.isNotEmpty && selectedCategory.value != 'All') {
       filteredList = filteredList
           .where((product) => product.category == selectedCategory.value)
           .toList();
     }
 
-    // Apply tag filter
     if (selectedTag.isNotEmpty && selectedTag.value != 'All') {
       filteredList = filteredList
           .where((product) =>
@@ -379,7 +369,6 @@ class ProductController extends GetxController {
           .toList();
     }
 
-    // Apply price range filter
     if (selectedPriceRange.isNotEmpty && selectedPriceRange.value != 'All') {
       filteredList = filteredList.where((product) {
         double price = product.price;
@@ -398,7 +387,6 @@ class ProductController extends GetxController {
       }).toList();
     }
 
-    // Update the searchProducts list with all filters applied
     searchProducts.assignAll(filteredList);
   }
 

@@ -9,7 +9,7 @@ import 'package:logiology_project/view/screens/profile_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Get.put(LoginController());
+  Get.put(AuthController());
   Get.put(ProfileController());
   Get.put(ProductController());
   runApp(const MyApp());
@@ -18,7 +18,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -33,7 +32,7 @@ class MyApp extends StatelessWidget {
         GetPage(
             name: '/',
             page: () => LoginScreen(),
-            binding: BindingsBuilder(() => Get.put(LoginController()))),
+            binding: BindingsBuilder(() => Get.put(AuthController()))),
         GetPage(name: '/home', page: () => HomeScreen()),
         GetPage(name: '/profile', page: () => ProfileScreen()),
         // GetPage(name: '/prodct details', page: () => ProductDetailsScreen(product: Get.arguments,)),
