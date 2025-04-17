@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:logiology_project/controller/getx/product_controller.dart';
 import 'package:logiology_project/view/screens/product_details_screen.dart';
 import 'package:logiology_project/view/widgets/filter_drop_down_widget.dart';
-import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -34,71 +33,8 @@ class HomeScreen extends StatelessWidget {
           )
         ],
       ),
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return GridView.builder(
-            padding: const EdgeInsets.all(12),
-            itemCount: 6,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: 0.65,
-            ),
-            itemBuilder: (context, index) {
-              return Shimmer.fromColors(
-                baseColor: Colors.grey[300]!,
-                highlightColor: Colors.grey[100]!,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(16)),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 12,
-                              color: Colors.white,
-                              margin: const EdgeInsets.only(bottom: 6),
-                            ),
-                            Container(
-                              height: 10,
-                              width: 50,
-                              color: Colors.white,
-                              margin: const EdgeInsets.only(bottom: 6),
-                            ),
-                            Container(
-                              height: 10,
-                              width: 30,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        }
 
-        return Column(
+        body:  Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(12),
@@ -115,7 +51,6 @@ class HomeScreen extends StatelessWidget {
                 onChanged: controller.searchQuery,
               ),
             ),
-
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -130,7 +65,6 @@ class HomeScreen extends StatelessWidget {
                         onChanged: (val) => controller.setCategory(val ?? ''),
                       )),
                   const SizedBox(width: 10),
-
                   Obx(() => FilterDropDownWidget(
                         hint: 'Tag',
                         value: controller.selectedTag.value.isEmpty
@@ -140,19 +74,15 @@ class HomeScreen extends StatelessWidget {
                         onChanged: (val) => controller.setTag(val ?? ''),
                       )),
                   const SizedBox(width: 10),
-
                   Obx(() => FilterDropDownWidget(
                         hint: 'Price',
                         value: controller.selectedPriceRange.value.isEmpty
                             ? null
                             : controller.selectedPriceRange.value,
                         items: controller.priceRanges,
-                        onChanged: (val) =>
-                            controller.setPriceRange(val ?? ''),
+                        onChanged: (val) => controller.setPriceRange(val ?? ''),
                       )),
-
                   const SizedBox(width: 10),
-
                   TextButton.icon(
                     onPressed: controller.resetFilters,
                     icon: const Icon(Icons.filter_list_off, size: 18),
@@ -168,9 +98,7 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-
             const SizedBox(height: 10),
-
             Expanded(
               child: Obx(() {
                 if (controller.searchProducts.isEmpty) {
@@ -226,7 +154,6 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
@@ -253,8 +180,7 @@ class HomeScreen extends StatelessWidget {
                                           size: 14, color: Colors.orange),
                                       const SizedBox(width: 4),
                                       Text(product.rating.toString(),
-                                          style:
-                                              const TextStyle(fontSize: 12)),
+                                          style: const TextStyle(fontSize: 12)),
                                     ],
                                   )
                                 ],
@@ -268,7 +194,6 @@ class HomeScreen extends StatelessWidget {
                 );
               }),
             ),
-
             Obx(() => controller.isMoreLoading.value
                 ? const Padding(
                     padding: EdgeInsets.all(12.0),
@@ -276,10 +201,6 @@ class HomeScreen extends StatelessWidget {
                   )
                 : const SizedBox()),
           ],
-        );
-      }),
-    );
-  }
+        ));
 }
-
-
+}
